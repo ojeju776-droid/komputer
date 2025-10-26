@@ -1,0 +1,170 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<!-- Guzik do włączenia konsoli -->
+<div style="position: absolute; top: 10px; right: 10px;">
+    <button class="btn btn-danger" @onclick="PokazKonsole">🔓 Konsola</button>
+</div>
+
+<!-- Konsola na środku ekranu -->
+@if (konsolaWidoczna)
+{
+    <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                        background-color: #222; padding: 20px; border-radius: 12px; color: white; width: 320px; z-index: 999;">
+        <div style="text-align: right;">
+            <button class="btn btn-sm btn-outline-light" @onclick="ZamknijKonsole">❌ Zamknij</button>
+        </div>
+
+        @if (!hasloPoprawne)
+        {
+            <p>Daj hasło:</p>
+            <input @bind="wpisaneHaslo" type="password" class="form-control" />
+            <button class="btn btn-sm btn-success mt-2" @onclick="SprawdzHaslo">OK</button>
+        }
+        else if (!wybranoAkcje)
+        {
+            <p>Wybierz akcję:</p>
+            <button class="btn btn-sm btn-warning mt-2 me-2" @onclick="AkcjaDodajHajs">💸 Dodaj hajs</button>
+            <button class="btn btn-sm btn-info mt-2" @onclick="AkcjaOgłoszenie">📢 Ogłoszenie</button>
+        }
+        else if (trybDodawaniaHajsu)
+        {
+            <p>Ile hajsu chcesz?</p>
+            <input @bind="wpisanyBonus" type="number" class="form-control" />
+            <button class="btn btn-sm btn-warning mt-2" @onclick="DodajHajs">Dodaj</button>
+        }
+        else if (trybOgłoszenia)
+        {
+            <p>Ogłoszenie dla wszystkich:</p>
+            <textarea @bind="ogloszenieTekst" class="form-control" rows="3"></textarea>
+            <button class="btn btn-sm btn-info mt-2" @onclick="WyslijOgloszenie">Wyślij</button>
+        }
+    </div>
+}
+
+<!-- Główna zawartość -->
+<p>masz @hajs dola dola</p>
+
+@if (!string.IsNullOrEmpty(ogloszenieGlobalne))
+{
+    <div style="background-color: #ffeb3b; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+        <strong>📢 Ogłoszenie:</strong> @ogloszenieGlobalne
+    </div>
+}
+
+<div class="row mb-3">
+    <button @onclick="dostan" class="btn btn-dark">
+        <img src="@komputer" />
+    </button>
+</div>
+
+<div class="row mb-3">
+    <button class="btn btn-primary" @onclick="ulepsz">ulepsz komputer za 10</button>
+    <p>@blad</p>
+</div>
+
+@code {
+    int hajs = 0;
+    string komputer = "komp1.webp";
+    int hajs_zarobek = 1;
+    int aktualny_komputer = 1;
+    string blad = "";
+
+    // Konsola: widoczność, hasło, akcje
+    bool konsolaWidoczna = false;
+    string wpisaneHaslo = "";
+    bool hasloPoprawne = false;
+    bool wybranoAkcje = false;
+    bool trybDodawaniaHajsu = false;
+    bool trybOgłoszenia = false;
+
+    // Dodawanie hajsu
+    int wpisanyBonus = 0;
+
+    // Ogłoszenie
+    string ogloszenieTekst = "";
+    string ogloszenieGlobalne = "";
+
+    void PokazKonsole()
+    {
+        konsolaWidoczna = true;
+    }
+
+    void ZamknijKonsole()
+    {
+        konsolaWidoczna = false;
+        wpisaneHaslo = "";
+        wpisanyBonus = 0;
+        hasloPoprawne = false;
+        wybranoAkcje = false;
+        trybDodawaniaHajsu = false;
+        trybOgłoszenia = false;
+        ogloszenieTekst = "";
+    }
+
+    void SprawdzHaslo()
+    {
+        if (wpisaneHaslo == "3312")
+        {
+            hasloPoprawne = true;
+            blad = "";
+        }
+        else
+        {
+            blad = "Złe hasło, frajerzyno";
+        }
+    }
+
+    void AkcjaDodajHajs()
+    {
+        wybranoAkcje = true;
+        trybDodawaniaHajsu = true;
+    }
+
+    void AkcjaOgłoszenie()
+    {
+        wybranoAkcje = true;
+        trybOgłoszenia = true;
+    }
+
+    void DodajHajs()
+    {
+        hajs += wpisanyBonus;
+        ZamknijKonsole();
+    }
+
+    void WyslijOgloszenie()
+    {
+        if (!string.IsNullOrWhiteSpace(ogloszenieTekst))
+        {
+            ogloszenieGlobalne = ogloszenieTekst;
+        }
+        ZamknijKonsole();
+    }
+
+    void dostan()
+    {
+        hajs += hajs_zarobek;
+    }
+
+    void ulepsz()
+    {
+        if (hajs >= 10)
+        {
+            aktualny_komputer += 1;
+            if (aktualny_komputer > 3)
+            {
+                aktualny_komputer = 1;
+            }
+            komputer = $"komp{aktualny_komputer}.webp";
+            hajs -= 10;
+            hajs_zarobek += 1;
+            blad = "";
+        }
+        else
+        {
+            blad = "Nie masz wystarczająco kasy frajerzyno";
+        }
+    }
+}
