@@ -1,11 +1,11 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 env:
-  PUBLISH_DIR: Komputer/bin/Release/net9.0/publish/wwwroot 
+  PUBLISH_DIR: dist\wwwroot
 on:
   push:
     paths:
-      - src/Komputer/**
+      - Komputer/**
     branches:
       - main
 
@@ -37,13 +37,13 @@ jobs:
           dotnet-version: '9.0'
 
       - name: Publish app
-        run: dotnet publish komputer -c Release 
-
+        run: dotnet publish Komputer -c Release
       - name: Rewrite base href
         uses: SteveSandersonMS/ghaction-rewrite-base-href@v1.1.0
         with:
           html_path: ${{ env.PUBLISH_DIR }}/index.html
-          base_href: /komputer/         
+          base_href: /Komputer/
+        
       - name: Setup Pages
         uses: actions/configure-pages@v5.0.0
 
