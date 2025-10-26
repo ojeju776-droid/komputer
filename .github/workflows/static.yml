@@ -1,12 +1,11 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 env:
-  PUBLISH_DIR: src/Blazor.Wasm/bin/Release/net9.0/publish/wwwroot # 👈 update project name
-
+  PUBLISH_DIR: Komputer/bin/Release/net9.0/publish/wwwroot 
 on:
   push:
     paths:
-      - src/Blazor.Wasm/** # 👈 update project name
+      - src/Komputer/**
     branches:
       - main
 
@@ -38,14 +37,13 @@ jobs:
           dotnet-version: '9.0'
 
       - name: Publish app
-        run: dotnet publish src/Blazor.Wasm -c Release # 👈 update project name
+        run: dotnet publish komputer -c Release 
 
       - name: Rewrite base href
         uses: SteveSandersonMS/ghaction-rewrite-base-href@v1.1.0
         with:
           html_path: ${{ env.PUBLISH_DIR }}/index.html
-          base_href: /blazor-wasm/ # 👈 update to your repo name
-        
+          base_href: /komputer/         
       - name: Setup Pages
         uses: actions/configure-pages@v5.0.0
 
